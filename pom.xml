@@ -147,7 +147,7 @@
 				<configuration>
 					<argLine>${jacoco.utAgentConfig}</argLine>
 					<excludes>
-						<exclude>**/RunCucumberIntegrationTestCase.java</exclude>
+						<!--<exclude>**/RunCucumberIntegrationTestCase.java</exclude>-->
 					</excludes>
 					<properties>
 						<property>
