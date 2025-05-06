@@ -24,7 +24,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>17</java.version>
 		<maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
-		<spring-cloud.version>Greenwich.SR3</spring-cloud.version>
+		<spring-cloud.version>2021.0.8</spring-cloud.version>
 
 		<surefire.version>3.2.5</surefire.version>
 		<failsafe.version>3.2.5</failsafe.version>
@@ -35,8 +35,6 @@
 		<jacoco.itReport>${project.build.directory}/jacoco-it.exec</jacoco.itReport>
 		<jacoco.utAgentConfig>-javaagent:${jacoco.path}=destfile=${jacoco.utReport}</jacoco.utAgentConfig>
 		<jacoco.itAgentConfig>-javaagent:${jacoco.path}=destfile=${jacoco.itReport}</jacoco.itAgentConfig>
-
-		<!-- <jacoco-listeners.version>5.10.2.17019</jacoco-listeners.version> -->
 	</properties>
 
 	<dependencies>
@@ -62,17 +60,6 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-			<version>2.3.1</version>
-		</dependency>
-		-->
 		<dependency>
 			<groupId>jakarta.xml.bind</groupId>
 			<artifactId>jakarta.xml.bind-api</artifactId>
@@ -82,11 +69,6 @@
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
 			<version>3.0.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.glassfish.jaxb</groupId>
-			<artifactId>jaxb-runtime</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.activation</groupId>
@@ -131,21 +113,10 @@
 			<classifier>runtime</classifier>
 			<scope>test</scope>
 		</dependency>
-		<!--<dependency>
-			<groupId>org.sonarsource.java</groupId>
-			<artifactId>sonar-jacoco-listeners</artifactId>
-			<version>${jacoco-listeners.version}</version>
-			<scope>test</scope>
-		</dependency> -->
+
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.rest-assured</groupId>
-			<artifactId>rest-assured</artifactId>
-			<version>4.1.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -174,19 +145,11 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${surefire.version}</version>
 				<configuration>
-					<!-- JDK 7 - relax bytecode verifier to prevent double -->
-					<!-- instrumentation issues with OpenJPA tests and JaCoCo -->
-					<!-- <argLine>-XX:-UseSplitVerifier ${jacoco.utAgentConfig}</argLine> -->
-					<!-- JDK 8 - bytecode verifier cannot be relaxed or disabled -->
-					<!-- to prevent runtime errors, OpenJPA tests are ignored -->
 					<argLine>${jacoco.utAgentConfig}</argLine>
 					<excludes>
-						<!--<exclude>**/*ApplicationTests.java</exclude> -->
 						<exclude>**/RunCucumberIntegrationTestCase.java</exclude>
 					</excludes>
 					<properties>
-						<!-- add SonarQube's JaCoCo listener to enable -->
-						<!-- gathering of code coverage metrics per test -->
 						<property>
 							<name>listener</name>
 							<value>org.sonar.java.jacoco.JUnitListener</value>
@@ -199,10 +162,7 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>${failsafe.version}</version>
 				<configuration>
-					<!-- JaCoCo must be enabled on target app container -->
-					<!--<argLine>${jacoco.itAgentConfig}</argLine> -->
 					<includes>
-						<!--<include>**/*ApplicationTests.java</include> -->
 						<include>**/*CucumberIntegrationTestCase.java</include>
 					</includes>
 				</configuration>
@@ -212,64 +172,6 @@
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>3.9.1.2184</version>
 			</plugin>
-			<!-- Docker -->
-			<!--<plugin> -->
-			<!--<groupId>com.spotify</groupId> -->
-			<!--<artifactId>dockerfile-maven-plugin</artifactId> -->
-			<!--<version>1.4.6</version> -->
-			<!--<executions> -->
-			<!--<execution> -->
-			<!--<id>default</id> -->
-			<!--<goals> -->
-			<!--<goal>build</goal> -->
-			<!--<goal>push</goal> -->
-			<!--</goals> -->
-			<!--</execution> -->
-			<!--</executions> -->
-			<!--<configuration> -->
-			<!--<repository>in28min/${project.name}</repository> -->
-			<!--<tag>${project.version}</tag> -->
-			<!--&lt;!&ndash;<skipDockerInfo>true</skipDockerInfo>&ndash;&gt; -->
-			<!--</configuration> -->
-			<!--</plugin> -->
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 </project>
